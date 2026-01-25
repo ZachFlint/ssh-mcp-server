@@ -89,6 +89,59 @@ export class CommandLineParser {
       };
     }
 
+    // Parse multiple named connections from environment variables
+    // Format: SSH_CONNECTIONS=name1,name2,name3
+    // Then for each: SSH_NAME1_HOST, SSH_NAME1_PORT, SSH_NAME1_USERNAME, SSH_NAME1_PASSWORD, etc.
+    if (Object.keys(configMap).length === 0) {
+      const connectionsEnv = getEnv("SSH_CONNECTIONS");
+      if (connectionsEnv) {
+        const connectionNames = connectionsEnv.split(",").map(s => s.trim()).filter(Boolean);
+        for (const name of connectionNames) {
+          const prefix = `SSH_${name.toUpperCase()}_`;
+          const host = getEnv(`${prefix}HOST`);
+          const portStr = getEnv(`${prefix}PORT`, "22");
+          const username = getEnv(`${prefix}USERNAME`);
+          const password = getEnv(`${prefix}PASSWORD`);
+          const privateKey = getEnv(`${prefix}PRIVATE_KEY`);
+          const passphrase = getEnv(`${prefix}PASSPHRASE`);
+          const whitelist = getEnv(`${prefix}WHITELIST`);
+          const blacklist = getEnv(`${prefix}BLACKLIST`);
+          const socksProxy = getEnv(`${prefix}SOCKS_PROXY`);
+          const timeout = getEnv(`${prefix}TIMEOUT`);
+
+          if (!host || !username || (!password && !privateKey)) {
+            throw new Error(
+              `Missing required parameters for connection "${name}". ` +
+              `Need ${prefix}HOST, ${prefix}USERNAME, and ${prefix}PASSWORD or ${prefix}PRIVATE_KEY`
+            );
+          }
+
+          const port = parseInt(portStr!, 10);
+          if (isNaN(port)) {
+            throw new Error(`Port for connection "${name}" must be a valid number`);
+          }
+
+          configMap[name] = {
+            name,
+            host,
+            port,
+            username,
+            password,
+            privateKey,
+            passphrase,
+            socksProxy,
+            defaultTimeout: timeout ? parseInt(timeout, 10) : undefined,
+            commandWhitelist: whitelist
+              ? whitelist.split(",").map(s => s.trim()).filter(Boolean)
+              : undefined,
+            commandBlacklist: blacklist
+              ? blacklist.split(",").map(s => s.trim()).filter(Boolean)
+              : undefined,
+          };
+        }
+      }
+    }
+
     // Compatible with single connection legacy parameters
     // Also supports environment variables: SSH_HOST, SSH_PORT, SSH_USERNAME, SSH_PASSWORD, SSH_PRIVATE_KEY, SSH_PASSPHRASE, SSH_TIMEOUT
     if (Object.keys(configMap).length === 0) {
@@ -105,7 +158,8 @@ export class CommandLineParser {
       if (!host || !portStr || !username || (!password && !privateKey)) {
         throw new Error(
           "Missing required parameters, need to provide host, port, username and password or private key. " +
-          "You can also use environment variables: SSH_HOST, SSH_PORT, SSH_USERNAME, SSH_PASSWORD, SSH_PRIVATE_KEY"
+          "You can also use environment variables: SSH_HOST, SSH_PORT, SSH_USERNAME, SSH_PASSWORD, SSH_PRIVATE_KEY. " +
+          "For multiple connections, use SSH_CONNECTIONS=name1,name2 with SSH_NAME1_HOST, SSH_NAME1_USERNAME, etc."
         );
       }
 

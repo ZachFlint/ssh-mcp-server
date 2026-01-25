@@ -1,6 +1,6 @@
 {
-  "name": "ssh-mcp-server",
-  "version": "1.0.0",
+  "name": "@zachflint/ssh-mcp-server",
+  "version": "1.0.1",
   "description": "SSH-based MCP Server",
   "main": "build/index.js",
   "type": "module",
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.17.5",
+    "dotenv": "^16.4.5",
     "socks": "^2.8.6",
     "ssh2": "^1.16.0",
     "zod": "^3.24.2"
