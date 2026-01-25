@@ -22,11 +22,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Zachanardo/ssh-mcp-server.git"
+    "url": "git+https://github.com/ZachFlint/ssh-mcp-server.git"
   },
-  "homepage": "https://github.com/Zachanardo/ssh-mcp-server#readme",
+  "homepage": "https://github.com/ZachFlint/ssh-mcp-server#readme",
   "bugs": {
-    "url": "https://github.com/Zachanardo/ssh-mcp-server/issues"
+    "url": "https://github.com/ZachFlint/ssh-mcp-server/issues"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.17.5",
