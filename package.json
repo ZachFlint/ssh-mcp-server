@@ -1,0 +1,37 @@
+{
+  "name": "ssh-mcp-server",
+  "version": "1.0.0",
+  "description": "SSH-based MCP Server",
+  "main": "build/index.js",
+  "type": "module",
+  "bin": {
+    "ssh-mcp-server": "build/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node scripts/build.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ssh",
+    "mcp",
+    "server",
+    "cli"
+  ],
+  "author": "Zach Flint",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.17.5",
+    "socks": "^2.8.6",
+    "ssh2": "^1.16.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/ssh2": "^1.15.5",
+    "typescript": "^5.8.2"
+  },
+  "files": [
+    "build/**/*"
+  ]
+}
